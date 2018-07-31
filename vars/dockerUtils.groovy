@@ -8,7 +8,7 @@ def call(String action) {
 
 def buildAndPush() {
     def image = docker.build("docker.adeo.no:5000/${env.APPLICATION_NAME}:${env.APPLICATION_VERSION}", "--pull .")
-    image.buildAndPush()
+    image.push()
 }
 
 def prune() {
