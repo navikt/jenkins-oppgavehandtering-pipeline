@@ -1,5 +1,6 @@
 def call() {
-    if(!${env.APPLICATION_VERSION} || !${env.APPLICATION_NAME}) {
+
+    if(!(env.APPLICATION_VERSION && env.APPLICATION_NAME)) {
         error 'environment variables APPLICATION_NAME and APPLICATION_VERSION are required'
     }
 
