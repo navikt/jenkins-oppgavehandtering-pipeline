@@ -6,8 +6,8 @@ def call(Map args) {
         case 'upload': return upload()
         case 'jiraDeploy': return jiraDeploy()
         case 'jiraDeployMultiple': return jiraDeployMultiple()
-        case 'jiraDeployProd' : return jiraProdPost(args.jiraIssueId)
-        case 'waitForCallBack' : return waitForCallback()
+        case 'jiraDeployProd': return jiraProdPost(args.jiraIssueId)
+        case 'waitForCallBack': return waitForCallback()
         default: error 'nais has been called without valid arguments'
     }
 }
@@ -28,10 +28,10 @@ def jiraDeploy() {
 }
 
 def jiraPost(String callbackUrl) {
-    if(!env.FASIT_ENV) {
+    if (!env.FASIT_ENV) {
         error 'Environment variable FASIT_ENV must be specified'
     }
-    if(!env.NAMESPACE) {
+    if (!env.NAMESPACE) {
         error 'Environment variable NAMESPACE must be specified'
     }
     def name = env.APPLICATION_NAME
@@ -62,22 +62,22 @@ def jiraProdPost(String jiraIssueId) {
     def version = env.APPLICATION_VERSION
     def postBody = [
             fields: [
-                    project: [key: "PROD"],
-                    issuetype: [id: "15101"],
-                    summary: "${name}:${version}",
+                    project          : [key: "PROD"],
+                    issuetype        : [id: "15101"],
+                    summary          : "${name}:${version}",
                     customfield_21440: ["id": "25705"],
                     customfield_20761: ["id": "24993"],
                     customfield_21110: ["id": "25279"]
             ],
             update: [
-                    issuelinks: [[
-                                         add: [
-                                                 type: [
-                                                         id: "10080"
-                                                 ],
-                                                 inwardIssue: [key: jiraIssueId]
-                                         ]
-                                 ]],
+                    issuelinks       : [[
+                                                add: [
+                                                        type       : [
+                                                                id: "10080"
+                                                        ],
+                                                        inwardIssue: [key: jiraIssueId]
+                                                ]
+                                        ]],
                     customfield_20768: [[set: [[key: service]]]],
                     customfield_20717: [[set: [[key: component]]]]
             ]
@@ -89,25 +89,23 @@ def jiraPostRequest(postBody) {
     def jiraPayload = JsonOutput.toJson(postBody)
     echo jiraPayload
 
-    withCredentials([[$class: "UsernamePasswordMultiBinding", credentialsId: "JIRA", usernameVariable: "JIRA_USERNAME", passwordVariable: "JIRA_PASSWORD"]]) {
-        def response = httpRequest([
-                url                   : "https://jira.adeo.no/rest/api/2/issue/",
-                authentication        : "nais-user",
-                consoleLogResponseBody: true,
-                contentType           : "APPLICATION_JSON",
-                httpMode              : "POST",
-                requestBody           : jiraPayload
-        ])
-        def jiraIssueId = readJSON([text: response.content])["key"].toString()
-        def description = "${env.FASIT_ENV} - <a href=\"https://jira.adeo.no/browse/$jiraIssueId\">$jiraIssueId</a>"
-        if (currentBuild.description?.trim()) {
-            currentBuild.description += "<br> $description"
-        } else {
-            currentBuild.description = description
-        }
-        return jiraIssueId
+    def response = httpRequest([
+            url                   : "https://jira.adeo.no/rest/api/2/issue/",
+            authentication        : "JIRA",
+            consoleLogResponseBody: true,
+            contentType           : "APPLICATION_JSON",
+            httpMode              : "POST",
+            requestBody           : jiraPayload])
+    def jiraIssueId = readJSON([text: response.content])["key"].toString()
+    def description = "${env.FASIT_ENV} - <a href=\"https://jira.adeo.no/browse/$jiraIssueId\">$jiraIssueId</a>"
+    if (currentBuild.description?.trim()) {
+        currentBuild.description += "<br> $description"
+    } else {
+        currentBuild.description = description
     }
+    return jiraIssueId
 }
+
 
 def waitForCallback() {
     try {
