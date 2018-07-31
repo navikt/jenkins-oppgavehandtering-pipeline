@@ -7,6 +7,7 @@ def call(Map args) {
         case 'jiraDeploy': return jiraDeploy()
         case 'jiraDeployMultiple': return jiraDeployMultiple()
         case 'jiraDeployProd' : return jiraProdPost(args.jiraIssueId)
+        case 'waitForCallBack' : return waitForCallback()
         default: error 'nais has been called without valid arguments'
     }
 }
@@ -23,11 +24,6 @@ def upload() {
 
 def jiraDeploy() {
     String url = "${env.BUILD_URL}input/Deploy".toString()
-    return jiraPost(url)
-}
-
-def jiraDeployMultiple() {
-    String url = "${env.BUILD_URL}input/${env.APPLICATION_NAME.capitalize()}-deploy/".toString()
     return jiraPost(url)
 }
 
@@ -110,5 +106,16 @@ def jiraPostRequest(postBody) {
             currentBuild.description = description
         }
         return jiraIssueId
+    }
+}
+
+def waitForCallback() {
+    try {
+        timeout(time: 1, unit: 'HOURS') {
+            input id: "deploy", message: "Waiting for remote Jenkins server to deploy the application..."
+        }
+    } catch (Exception exception) {
+        currentBuild.description = "Deploy failed, see " + currentBuild.description
+        throw exception
     }
 }
