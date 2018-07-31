@@ -13,12 +13,12 @@ def call(Map args) {
 }
 
 def validate() {
-    sh "nais validate"
+    sh "/usr/local/bin/nais validate"
 }
 
 def upload() {
-    withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'nexus-user', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD']]) {
-        sh "nais upload --app ${env.APPLICATION_NAME} -v ${env.APPLICATION_VERSION}"
+    withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'Nexus', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD']]) {
+        sh "/usr/local/bin/nais upload -a=${env.APPLICATION_NAME} -v=${env.APPLICATION_VERSION}"
     }
 }
 
