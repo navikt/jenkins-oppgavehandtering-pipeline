@@ -1,3 +1,4 @@
+import java.text.SimpleDateFormat
 def call() {
     if(!env.GIT_COMMIT) {
         error 'environment variable GIT_COMMIT is required'
