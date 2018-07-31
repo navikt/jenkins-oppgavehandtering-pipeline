@@ -97,7 +97,7 @@ def jiraPostRequest(postBody) {
             httpMode              : "POST",
             requestBody           : jiraPayload])
     def jiraIssueId = readJSON([text: response.content])["key"].toString()
-    def description = "${env.FASIT_ENV} - <a href=\"https://jira.adeo.no/browse/$jiraIssueId\">$jiraIssueId</a>"
+    def description = "${env.FASIT_ENV} - $jiraIssueId"
     if (currentBuild.description?.trim()) {
         currentBuild.description += "<br> $description"
     } else {
