@@ -1,7 +1,8 @@
 def call() {
-
-    if(!(env.APPLICATION_VERSION && env.APPLICATION_NAME)) {
-        error 'environment variables APPLICATION_NAME and APPLICATION_VERSION are required'
+    if(!env.APPLICATION_NAME) {
+        error 'environment variable: APPLICATION_NAME is required'
+    } else if(!env.APPLICATION_VERSION) {
+        error 'environment variable: APPLICATION_VERSION is required'
     }
 
     withEnv(['HTTPS_PROXY=http://webproxy-utvikler.nav.no:8088']) {
