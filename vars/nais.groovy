@@ -7,8 +7,8 @@ def call(Map args) {
         case 'jiraDeploy': return jiraDeploy()
         case 'jiraDeployMultiple': return jiraDeployMultiple()
         case 'jiraDeployProd': return jiraProdPost(args.jiraIssueId)
-        case 'waitForCallBack': return waitForCallback()
-        default: error 'nais has been called without valid arguments'
+        case 'waitForCallback': return waitForCallback()
+        default: error 'Nais-lib(jenkins) has been called with invalid argument'
     }
 }
 
