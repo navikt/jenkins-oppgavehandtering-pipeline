@@ -5,7 +5,7 @@ def call(Map args) {
     switch (args.status) {
         case 'started': return slackBuildStarted(args.changeLog)
         case 'passed': return slackBuildPassed()
-        case 'deploying': return slackBuildDeploying(args.jiraIssueId)
+        case 'deployed': return slackBuildDeployed(args.jiraIssueId)
         case 'aborted': return slackBuildAborted()
         case 'success': return slackBuildSuccess()
         case 'failure': return slackBuildFailed()
@@ -49,9 +49,9 @@ def slackBuildPassed() {
     return slackMessageAttachments(vars)
 }
 
-def slackBuildDeploying(String jiraIssueId) {
+def slackBuildDeployed(String jiraIssueId) {
     Map vars = [:]
-    vars.title = "Deploying: ${jiraIssueId} to ${env.FASIT_ENV} :slow_parrot:".toString()
+    vars.title = "Deployed: ${jiraIssueId} to ${env.FASIT_ENV} :slow_parrot:".toString()
     vars.titleLink = "https://jira.adeo.no/browse/$jiraIssueId".toString()
     vars.fallback = "Deploying: #${env.BUILD_NUMBER} of ${env.APPLICATION_NAME} - ${env.BUILD_URL}".toString()
     vars.color = "#FFFE89"
