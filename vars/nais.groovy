@@ -98,11 +98,7 @@ def jiraPostRequest(postBody) {
             requestBody           : jiraPayload])
     def jiraIssueId = readJSON([text: response.content])["key"].toString()
     def description = "${env.FASIT_ENV} - $jiraIssueId"
-    if (currentBuild.description?.trim()) {
-        currentBuild.description += "<br> $description"
-    } else {
-        currentBuild.description = description
-    }
+    currentBuild.description = description
     return jiraIssueId
 }
 
