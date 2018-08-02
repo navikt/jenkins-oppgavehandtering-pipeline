@@ -109,6 +109,7 @@ def waitForCallback() {
             input id: "deploy", message: "Waiting for remote Jenkins server to deploy the application..."
         }
     } catch (Exception exception) {
+        echo exception.getClass().getName()
         currentBuild.description = "Deploy failed, see " + currentBuild.description
         throw exception
     }
