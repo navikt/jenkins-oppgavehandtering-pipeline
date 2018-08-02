@@ -108,7 +108,12 @@ def jiraPostRequest(postBody) {
 
 
 def waitForCallback() {
-    timeout(time: 1, unit: 'HOURS') {
-        input id: "deploy", message: "Waiting for remote Jenkins server to deploy the application..."
+    try {
+        timeout(time: 1, unit: 'HOURS') {
+            input id: "deploy", message: "Waiting for remote Jenkins server to deploy the application..."
+        }
+    } catch (Exception exception) {
+        currentBuild.description = "Deploy failed, see " + currentBuild.description
+        throw exception
     }
 }

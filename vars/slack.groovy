@@ -14,7 +14,7 @@ def call(Map args) {
 }
 
 def slackMessageAttachments(Map args) {
-    def footer = "<${env.BUILD_URL}|${env.APPLICATION_NAME} - #${env.BUILD_NUMBER} - v${env.APPLICATION_VERSION}>".toString()
+    def footer = "<${env.BUILD_URL}|${env.APPLICATION_NAME}:${env.APPLICATION_VERSION}  #${env.BUILD_NUMBER} (${env.BRANCH_NAME})  - >".toString()
 
     JSONArray attachments = new JSONArray()
     JSONObject attachment = new JSONObject()
@@ -31,36 +31,18 @@ def slackMessageAttachments(Map args) {
     slackSend(color: '#00FF00', attachments: attachments.toString())
 }
 
-def slackBuildStarted(String changeLog) {
-    Map vars = [:]
-    vars.title = "Started on ${env.NODE_NAME} :hypers:".toString()
-    vars.titleLink = "${env.BUILD_URL}".toString()
-    vars.fallback = "Started: #${env.BUILD_NUMBER} of ${env.APPLICATION_NAME} - ${env.BUILD_URL}".toString()
-    vars.color = "#D4DADF"
-    vars.text = changeLog
-    return slackMessageAttachments(vars)
-}
-
-def slackBuildPassed() {
-    Map vars = [:]
-    vars.title = "Tests passed in ${currentBuild.durationString.replace(' and counting', '')} :feelsrareman:".toString()
-    vars.fallback = "Tests passed: #${env.BUILD_NUMBER} of ${env.APPLICATION_NAME} - ${env.BUILD_URL}".toString()
-    vars.color = "#FFFE89"
-    return slackMessageAttachments(vars)
-}
-
 def slackBuildDeployed(String jiraIssueId) {
     Map vars = [:]
-    vars.title = "Deployed: ${jiraIssueId} to ${env.FASIT_ENV} :slow_parrot:".toString()
+    vars.title = "Deployed: ${env.APPLICATION_NAME}:${env.APPLICATION_VERSION} (${jiraIssueId}) to ${env.FASIT_ENV}".toString()
     vars.titleLink = "https://jira.adeo.no/browse/$jiraIssueId".toString()
-    vars.fallback = "Deploying: #${env.BUILD_NUMBER} of ${env.APPLICATION_NAME} - ${env.BUILD_URL}".toString()
+    vars.fallback = "Deployed: #${env.BUILD_NUMBER} of ${env.APPLICATION_NAME} - ${env.BUILD_URL}".toString()
     vars.color = "#FFFE89"
     return slackMessageAttachments(vars)
 }
 
 def slackBuildAborted() {
     Map vars = [:]
-    vars.title = "Aborted :confused_parrot:"
+    vars.title = "Build aborted"
     vars.fallback = "Aborted: #${env.BUILD_NUMBER} of ${env.APPLICATION_NAME} - ${env.BUILD_URL}".toString()
     vars.color = "#FF9FA1"
     return slackMessageAttachments(vars)
@@ -68,7 +50,7 @@ def slackBuildAborted() {
 
 def slackBuildSuccess() {
     Map vars = [:]
-    vars.title = "Finished in ${currentBuild.durationString.replace(' and counting', '')} :ultrafast_parrot:".toString()
+    vars.title = "Finished in ${currentBuild.durationString.replace(' and counting', '')}".toString()
     vars.fallback = "Finished: #${env.BUILD_NUMBER} of ${env.APPLICATION_NAME} - ${env.BUILD_URL}".toString()
     vars.color = "#BDFFC3"
     return slackMessageAttachments(vars)
@@ -76,7 +58,7 @@ def slackBuildSuccess() {
 
 def slackBuildFailed() {
     Map vars = [:]
-    vars.title = "Failed :explody_parrot:"
+    vars.title = "Failed"
     vars.fallback = "Failed: #${env.BUILD_NUMBER} of ${env.APPLICATION_NAME} - ${env.BUILD_URL}".toString()
     vars.color = "#FF9FA1"
     return slackMessageAttachments(vars)
