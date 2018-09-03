@@ -42,7 +42,7 @@ def slackBuildDeployed(String jiraIssueId) {
 
 def slackBuildAborted() {
     Map vars = [:]
-    vars.title = "Build aborted - ${env.CURRENT_STAGE}"
+    vars.title = "Build aborted " ${env.CURRENT_STAGE}
     vars.fallback = "Aborted ${env.CURRENT_STAGE}: #${env.BUILD_NUMBER} of ${env.APPLICATION_NAME} - ${env.BUILD_URL}".toString()
     vars.color = "#FF9FA1"
     return slackMessageAttachments(vars)
@@ -58,7 +58,7 @@ def slackBuildSuccess() {
 
 def slackBuildFailed() {
     Map vars = [:]
-    vars.title = "Build failed - ${env.CURRENT_STAGE}"
+    vars.title = "Build failed " ${env.CURRENT_STAGE}
     vars.fallback = "Failed ${env.CURRENT_STAGE}: #${env.BUILD_NUMBER} of ${env.APPLICATION_NAME} - ${env.BUILD_URL}".toString()
     vars.color = "#FF9FA1"
     return slackMessageAttachments(vars)
