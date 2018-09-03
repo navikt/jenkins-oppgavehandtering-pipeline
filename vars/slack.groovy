@@ -14,6 +14,7 @@ def call(Map args) {
 }
 
 def slackMessageAttachments(Map args) {
+    sh 'printenv'
     def footer = "<${env.BUILD_URL}|${env.APPLICATION_NAME}:${env.APPLICATION_VERSION} (${env.CURRENT_STAGE}) #${env.BUILD_NUMBER} (${env.BRANCH_NAME})".toString()
 
     JSONArray attachments = new JSONArray()
