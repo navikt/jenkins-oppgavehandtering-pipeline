@@ -14,8 +14,7 @@ def call(Map args) {
 }
 
 def slackMessageAttachments(Map args) {
-    sh 'printenv'
-    def footer = "<${env.BUILD_URL}|${env.APPLICATION_NAME}:${env.APPLICATION_VERSION} (${env.CURRENT_STAGE}) #${env.BUILD_NUMBER} (${env.BRANCH_NAME})".toString()
+    def footer = "${env.BUILD_URL}|${env.APPLICATION_NAME}:${env.APPLICATION_VERSION} #${env.BUILD_NUMBER} (${env.BRANCH_NAME})".toString()
 
     JSONArray attachments = new JSONArray()
     JSONObject attachment = new JSONObject()
@@ -43,7 +42,7 @@ def slackBuildDeployed(String jiraIssueId) {
 
 def slackBuildAborted() {
     Map vars = [:]
-    vars.title = "Build aborted ${env.CURRENT_STAGE}"
+    vars.title = "Build aborted ${env.CURRENT_STAGE}".toString()
     vars.fallback = "Aborted ${env.CURRENT_STAGE}: #${env.BUILD_NUMBER} of ${env.APPLICATION_NAME} - ${env.BUILD_URL}".toString()
     vars.color = "#FF9FA1"
     return slackMessageAttachments(vars)
