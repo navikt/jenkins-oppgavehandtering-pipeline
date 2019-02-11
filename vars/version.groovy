@@ -1,4 +1,5 @@
 import java.text.SimpleDateFormat
+
 def call() {
     if(!env.GIT_COMMIT) {
         error 'environment variable GIT_COMMIT is required'
@@ -10,8 +11,16 @@ def version() {
     return timestamp() + "." + commitHashShort()
 }
 
+def version(commitHashLong) {
+    return timestamp() + "." + commitHashShort(commitHashLong)
+}
+
 def commitHashShort() {
-    return env.GIT_COMMIT.substring(0, 8)
+    return commitHashShort(env.GIT_COMMIT)
+}
+
+def commitHashShort(commitHashLong) {
+    return commitHashLong.substring(0, 8)
 }
 
 static def timestamp() {
