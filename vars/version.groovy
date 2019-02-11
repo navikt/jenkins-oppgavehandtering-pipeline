@@ -17,3 +17,5 @@ def commitHashShort() {
 static def timestamp() {
     return new SimpleDateFormat("yyyyMMdd.HHmm").format(new Date())
 }
+
+return this;
