@@ -17,8 +17,12 @@ def validate() {
 }
 
 def upload() {
+    upload(env.APPLICATION_NAME, env.APPLICATION_VERSION)
+}
+
+def upload(final String applicationName, final String applicationVersion) {
     withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'Nexus', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD']]) {
-        sh "/usr/local/bin/nais upload -a=${env.APPLICATION_NAME} -v=${env.APPLICATION_VERSION}"
+        sh "/usr/local/bin/nais upload -a=${applicationName} -v=${applicationVersion}"
     }
 }
 
@@ -27,7 +31,7 @@ def jiraDeploy() {
     return jiraPost(url)
 }
 
-def jiraPost(String callbackUrl) {
+def jiraPost(final String callbackUrl) {
     if (!env.FASIT_ENV) {
         error 'Environment variable FASIT_ENV must be specified'
     }
@@ -55,7 +59,7 @@ def jiraPost(String callbackUrl) {
     return jiraPostRequest(postBody)
 }
 
-def jiraProdPost(String jiraIssueId) {
+def jiraProdPost(final String jiraIssueId) {
     def service = env.APPLICATION_SERVICE
     def component = env.APPLICATION_COMPONENT
     def name = env.APPLICATION_NAME
@@ -85,7 +89,7 @@ def jiraProdPost(String jiraIssueId) {
     return jiraPostRequest(postBody)
 }
 
-def jiraPostRequest(postBody) {
+def jiraPostRequest(final postBody) {
     def jiraPayload = JsonOutput.toJson(postBody)
     echo jiraPayload
 
@@ -114,3 +118,5 @@ def waitForCallback() {
         throw exception
     }
 }
+
+return this;
