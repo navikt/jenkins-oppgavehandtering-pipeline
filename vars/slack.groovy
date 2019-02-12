@@ -14,7 +14,11 @@ def call(Map args) {
 }
 
 def slackMessageAttachments(Map args) {
-    def footer = "${env.BUILD_URL}|${env.APPLICATION_NAME}:${env.APPLICATION_VERSION} #${env.BUILD_NUMBER} (${env.BRANCH_NAME})".toString()
+    return slackMessageAttachments(args, env.BUILD_URL, env.APPLICATION_NAME, env.APPLICATION_VERSION, env.BUILD_NUMBER, env.BRANCH_NAME)
+}
+
+def slackMessageAttachments(final Map args, final String buildUrl, final String applicationName, final String applicationVersion, final String buildNumber, final String branchName
+    def footer = "${buildUrl}|${env.applicationName}:${env.applicationVersion} #${buildNumber} (${branchName})".toString()
 
     JSONArray attachments = new JSONArray()
     JSONObject attachment = new JSONObject()
@@ -31,13 +35,18 @@ def slackMessageAttachments(Map args) {
     slackSend(color: '#00FF00', attachments: attachments.toString())
 }
 
-def slackBuildDeployed(String jiraIssueId) {
+def slackBuildDeployed(final String jiraIssueId) {
+    return slackBuildDeployed(jiraIssueId, env.APPLICATION_NAME, env.APPLICATION_VERSION, env.FASIT_ENV, env.BUILD_NUMBER, env.BUILD_URL, env.BRANCH_NAME)
+}
+
+def slackBuildDeployed(final String jiraIssueId, final String applicationName, final String applicationVersion, final String fasitEnv, final String buildNumber, final String buildUrl, final String branchName) {
     Map vars = [:]
-    vars.title = "Deployed: ${env.APPLICATION_NAME}:${env.APPLICATION_VERSION} (${jiraIssueId}) to ${env.FASIT_ENV}".toString()
+    vars.title = "Deployed: ${applicationName}:${applicationVersion} (${jiraIssueId}) to ${fasitEnv}".toString()
     vars.titleLink = "https://jira.adeo.no/browse/$jiraIssueId".toString()
-    vars.fallback = "Deployed: #${env.BUILD_NUMBER} of ${env.APPLICATION_NAME} - ${env.BUILD_URL}".toString()
+    vars.fallback = "Deployed: #${buildNumber} of ${applicationName} - ${buildUrl}".toString()
     vars.color = "#FFFE89"
-    return slackMessageAttachments(vars)
+
+    return slackMessageAttachments(vars, buildUrl, applicationName, applicationVersion, buildNumber, branchName)
 }
 
 def slackBuildAborted() {
@@ -63,3 +72,5 @@ def slackBuildFailed() {
     vars.color = "#FF9FA1"
     return slackMessageAttachments(vars)
 }
+
+return this;
