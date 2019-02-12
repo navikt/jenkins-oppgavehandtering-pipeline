@@ -63,7 +63,7 @@ def slackBuildAborted(final String currentStage, final String buildNumber, final
 }
 
 def slackBuildSuccess() {
-    return slackBuildSuccess(env.BUILD_NUMBER, env.APPLICATION_NAME, env.BUILD_URL)
+    return slackBuildSuccess(env.CURRENT_STAGE, env.BUILD_NUMBER, env.APPLICATION_NAME, env.APPLICATION_VERSION, env.BUILD_URL, env.BRANCH_NAME)
 }
 
 def slackBuildSuccess(final String currentStage, final String buildNumber, final String applicationName, final String applicationVersion, final String buildUrl, final String branchName) {
@@ -76,11 +76,16 @@ def slackBuildSuccess(final String currentStage, final String buildNumber, final
 }
 
 def slackBuildFailed() {
+    return slackBuildFailed(env.CURRENT_STAGE, env.BUILD_NUMBER, env.APPLICATION_NAME, env.APPLICATION_VERSION, env.BUILD_URL, env.BRANCH_NAME)
+}
+
+def slackBuildFailed(final String currentStage, final String buildNumber, final String applicationName, final String applicationVersion, final String buildUrl, final String branchName) {
     Map vars = [:]
     vars.title = "Build failed (stage: ${env.CURRENT_STAGE})".toString()
-    vars.fallback = "Failed ${env.CURRENT_STAGE}: #${env.BUILD_NUMBER} of ${env.APPLICATION_NAME} - ${env.BUILD_URL}".toString()
+    vars.fallback = "Failed ${currentStage}: #${buildNumber} of ${applicationName} - ${buildUrl}".toString()
     vars.color = "#FF9FA1"
-    return slackMessageAttachments(vars)
+
+    return slackMessageAttachments(vars, buildUrl, applicationName, applicationVersion, buildNumber, branchName)
 }
 
 return this;
