@@ -24,11 +24,6 @@ def buildAndPush(final String  applicationName, final String applicationVersion)
 	image.push()
 	echo "The docker image successfully built and pushed."
     }
-
-    /*
-    def image = docker.build("docker.adeo.no:5000/" + applicationName + ":" + applicationVersion, "--pull .")
-    image.push()
-    */
 }
 
 def prune() {
