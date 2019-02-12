@@ -1,4 +1,4 @@
-def call(String action) {
+def call(final String action) {
     switch (action) {
         case 'buildAndPush': return buildAndPush()
         case 'prune': return prune()
@@ -10,7 +10,7 @@ def buildAndPush() {
     buildAndPush(env.APPLICATION_NAME, env.APPLICATION_VERSION)
 }
 
-def buildAndPush(applicationName, applicationVersion) {
+def buildAndPush(final String  applicationName, final String applicationVersion) {
     def image = docker.build("docker.adeo.no:5000/" + applicationName + ":" + applicationVersion, "--pull .")
     image.push()
 }
