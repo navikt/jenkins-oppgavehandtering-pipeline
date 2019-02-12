@@ -14,9 +14,9 @@ def buildAndPush(final String  applicationName, final String applicationVersion)
     
     def fullDockerImageName = applicationName + ":" + applicationVersion
     def repoUrl = "https://repo.adeo.no:5443/"
-    docker.withRegistry(repoUrl, "JENKINS_NEXUS_REPO_ADEO_USER") {
+	docker.withRegistry("${repoUrl}", "JENKINS_NEXUS_REPO_ADEO_USER") {
 		echo "About to build docker image..."
-		def image = docker.build(repoUrl + fullDockerImageName, "--pull .")
+		def image = docker.build("${repoUrl}" + "${fullDockerImageName}", "--pull .")
 		echo "About to push the just built docker image..."
 		image.push()
 		echo "The docker image successfully built and pushed."
