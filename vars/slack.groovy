@@ -63,11 +63,16 @@ def slackBuildAborted(final String currentStage, final String buildNumber, final
 }
 
 def slackBuildSuccess() {
+    return slackBuildSuccess(env.BUILD_NUMBER, env.APPLICATION_NAME, env.BUILD_URL)
+}
+
+def slackBuildSuccess(final String currentStage, final String buildNumber, final String applicationName, final String applicationVersion, final String buildUrl, final String branchName) {
     Map vars = [:]
     vars.title = "Finished in ${currentBuild.durationString.replace(' and counting', '')}".toString()
-    vars.fallback = "Finished: #${env.BUILD_NUMBER} of ${env.APPLICATION_NAME} - ${env.BUILD_URL}".toString()
+    vars.fallback = "Finished: #${buildUrl} of ${applicationName} - ${buildUrl}".toString()
     vars.color = "#BDFFC3"
-    return slackMessageAttachments(vars)
+    
+    return slackMessageAttachments(vars, buildUrl, applicationName, applicationVersion, buildNumber, branchName)
 }
 
 def slackBuildFailed() {
