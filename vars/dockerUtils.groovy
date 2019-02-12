@@ -7,10 +7,16 @@ def call(String action) {
 }
 
 def buildAndPush() {
-    def image = docker.build("docker.adeo.no:5000/${env.APPLICATION_NAME}:${env.APPLICATION_VERSION}", "--pull .")
+    buildAndPush(env.APPLICATION_NAME, env.APPLICATION_VERSION)
+}
+
+def buildAndPush(applicationName, applicationVersion) {
+    def image = docker.build("docker.adeo.no:5000/" + applicationName + ":" + applicationVersion, "--pull .")
     image.push()
 }
 
 def prune() {
     sh "docker image prune -f"
 }
+
+return this;
