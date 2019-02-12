@@ -27,36 +27,41 @@ def upload(final String applicationName, final String applicationVersion) {
 }
 
 def jiraDeploy() {
-    String url = "${env.BUILD_URL}input/Deploy".toString()
-    return jiraPost(url)
+    return jiraDeploy(env.BUILD_URL, env.FASIT_ENV, env.NAMESPACE)
+}
+
+def jiraDeploy(final String buildUrl, final String fasitEnv, final String nameSpace, final String applicationName, final String applicationVersion) {
+    String callbackUrl = "${buildUrl}input/Deploy".toString()
+    return jiraPost(callbackUrl, fasitEnv, nameSpace, applicationName, applicationVersion)
 }
 
 def jiraPost(final String callbackUrl) {
-    if (!env.FASIT_ENV) {
+    return jiraPost(final String callbackUrl, env.FASIT_ENV, env.NAMESPACE, env.APPLICATION_NAME, env.APPLICATION_VERSION)
+}
+
+def jiraPost(final String callbackUrl, final String fasitEnv, final String nameSpace, final String applicationName, final String applicationVersion) {
+    if (!fasitEnv) {
         error 'Environment variable FASIT_ENV must be specified'
     }
-    if (!env.NAMESPACE) {
+    if (!nameSpace) {
         error 'Environment variable NAMESPACE must be specified'
     }
-    def name = env.APPLICATION_NAME
-    def version = env.APPLICATION_VERSION
-    def environment = env.FASIT_ENV
-    def namespace = env.NAMESPACE
 
     def postBody = [
             fields: [
                     project          : [key: "DEPLOY"],
                     issuetype        : [id: "14302"],
-                    customfield_14811: [value: "${environment}"],
-                    customfield_14812: "${name}:${version}",
+                    customfield_14811: [value: "${fasitEnv}"],
+                    customfield_14812: "${applicationName}:${applicationVersion}",
                     customfield_17410: callbackUrl,
                     customfield_19015: [id: "22707", value: "Yes"],
-                    customfield_19413: "${namespace}",
+                    customfield_19413: "${nameSpace}",
                     customfield_19610: [value: "fss"],
-                    summary          : "Automatisk deploy av ${name}:${version} til ${environment} (${namespace} namespace)"
+                    summary          : "Automatisk deploy av ${applicationName}:${applicationVersion} til ${fasitEnv} (${nameSpace} namespace)"
             ]
     ]
-    return jiraPostRequest(postBody)
+    
+    return jiraPostRequest(postBody, fasitEnv)
 }
 
 def jiraProdPost(final String jiraIssueId) {
@@ -90,9 +95,12 @@ def jiraProdPost(final String jiraIssueId) {
 }
 
 def jiraPostRequest(final postBody) {
+    return jiraPostRequest(final postBody, env.FASIT_ENV)
+}
+
+def jiraPostRequest(final postBody, final String fasitEnv) {
     def jiraPayload = JsonOutput.toJson(postBody)
     echo jiraPayload
-
     def response = httpRequest([
             url                   : "https://jira.adeo.no/rest/api/2/issue/",
             authentication        : "JIRA",
@@ -101,11 +109,11 @@ def jiraPostRequest(final postBody) {
             httpMode              : "POST",
             requestBody           : jiraPayload])
     def jiraIssueId = readJSON([text: response.content])["key"].toString()
-    def description = "${env.FASIT_ENV} - $jiraIssueId"
+    def description = "${fasitEnv} - $jiraIssueId"
     currentBuild.description = description
+    
     return jiraIssueId
 }
-
 
 def waitForCallback() {
     try {
