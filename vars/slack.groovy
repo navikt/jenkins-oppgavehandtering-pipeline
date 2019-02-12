@@ -17,7 +17,7 @@ def slackMessageAttachments(Map args) {
     return slackMessageAttachments(args, env.BUILD_URL, env.APPLICATION_NAME, env.APPLICATION_VERSION, env.BUILD_NUMBER, env.BRANCH_NAME)
 }
 
-def slackMessageAttachments(final Map args, final String buildUrl, final String applicationName, final String applicationVersion, final String buildNumber, final String branchName)
+def slackMessageAttachments(final Map args, final String buildUrl, final String applicationName, final String applicationVersion, final String buildNumber, final String branchName) {
     def footer = "${buildUrl}|${env.applicationName}:${env.applicationVersion} #${buildNumber} (${branchName})".toString()
 
     JSONArray attachments = new JSONArray()
