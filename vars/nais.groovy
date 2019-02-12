@@ -36,7 +36,7 @@ def jiraDeploy(final String buildUrl, final String fasitEnv, final String nameSp
 }
 
 def jiraPost(final String callbackUrl) {
-    return jiraPost(final String callbackUrl, env.FASIT_ENV, env.NAMESPACE, env.APPLICATION_NAME, env.APPLICATION_VERSION)
+    return jiraPost(callbackUrl, env.FASIT_ENV, env.NAMESPACE, env.APPLICATION_NAME, env.APPLICATION_VERSION)
 }
 
 def jiraPost(final String callbackUrl, final String fasitEnv, final String nameSpace, final String applicationName, final String applicationVersion) {
