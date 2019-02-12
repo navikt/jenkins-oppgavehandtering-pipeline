@@ -95,7 +95,7 @@ def jiraProdPost(final String jiraIssueId) {
 }
 
 def jiraPostRequest(final postBody) {
-    return jiraPostRequest(final postBody, env.FASIT_ENV)
+    return jiraPostRequest(postBody, env.FASIT_ENV)
 }
 
 def jiraPostRequest(final postBody, final String fasitEnv) {
