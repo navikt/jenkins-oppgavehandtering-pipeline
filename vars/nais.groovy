@@ -27,7 +27,7 @@ def upload(final String applicationName, final String applicationVersion) {
 }
 
 def jiraDeploy() {
-    return jiraDeploy(env.BUILD_URL, env.FASIT_ENV, env.NAMESPACE)
+    return jiraDeploy(env.BUILD_URL, env.FASIT_ENV, env.NAMESPACE, env.APPLICATION_NAME, env.APPLICATION_VERSION)
 }
 
 def jiraDeploy(final String buildUrl, final String fasitEnv, final String nameSpace, final String applicationName, final String applicationVersion) {
