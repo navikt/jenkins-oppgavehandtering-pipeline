@@ -31,6 +31,7 @@ def jiraDeploy() {
 }
 
 def jiraDeploy(final String buildUrl, final String fasitEnv, final String nameSpace, final String applicationName, final String applicationVersion) {
+    echo 'Entering jiraDeploy(final String buildUrl, final String fasitEnv, final String nameSpace, final String applicationName, final String applicationVersion)...'
     String callbackUrl = "${buildUrl}input/Deploy".toString()
     return jiraPost(callbackUrl, fasitEnv, nameSpace, applicationName, applicationVersion)
 }
@@ -99,6 +100,8 @@ def jiraPostRequest(final postBody) {
 }
 
 def jiraPostRequest(final postBody, final String fasitEnv) {
+    
+    echo 'Entering jiraPostRequest(final postBody, final String fasitEnv)...'
     def jiraPayload = JsonOutput.toJson(postBody)
     echo jiraPayload
     def response = httpRequest([
