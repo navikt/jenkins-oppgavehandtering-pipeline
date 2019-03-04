@@ -6,7 +6,7 @@ def call() {
     }
 
     withEnv(['HTTPS_PROXY=http://webproxy-utvikler.nav.no:8088']) {
-		withCredentials([usernamePassword(credentialsId: 'github-aksess-token', variable: 'token')]) {
+		withCredentials([usernamePassword(credentialsId: 'github-access-token', variable: 'token')]) {
 			sh ("git tag -a ${env.APPLICATION_VERSION} -m ${env.APPLICATION_VERSION}")
 			sh ("git push https://${tokenName}:${token}@github.com/navikt/${env.APPLICATION_NAME}.git --tags")
 		}
