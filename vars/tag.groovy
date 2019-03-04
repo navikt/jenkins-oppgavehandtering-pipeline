@@ -11,3 +11,4 @@ def call() {
 			sh ("git push https://${tokenName}:${token}@github.com/navikt/${env.APPLICATION_NAME}.git --tags")
 		}
     }
+}
