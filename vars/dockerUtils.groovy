@@ -24,6 +24,9 @@ def buildAndPush(final String  applicationName, final String applicationVersion)
 	image.push()
 	echo "The docker image successfully built and pushed."
     }
+
+    return dockerTag;
+	
 }
 
 def prune() {
